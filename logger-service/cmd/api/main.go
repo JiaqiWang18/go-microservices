@@ -30,7 +30,6 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-	log.Println("Connected to MongoDB")
 	client = mongoClient
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -71,13 +70,14 @@ func main() {
 func connectToMongo() (*mongo.Client, error) {
 	clientOptions := options.Client().ApplyURI(mongoURL)
 	clientOptions.SetAuth(options.Credential{
-		Username: os.Getenv("MONGO_INITDB_ROOT_USERNAME"),
-		Password: os.Getenv("MONGO_INITDB_ROOT_PASSWORD"),
+		Username: os.Getenv("MONGO_USER"),
+		Password: os.Getenv("MONGO_PASSWORD"),
 	})
 	c, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Panic(err)
 		return nil, err
 	}
+	log.Println("Connected to MongoDB")
 	return c, nil
 }
